@@ -45,6 +45,13 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "search_page/search_page",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
 		}]
 	}],
 	"globalStyle": {

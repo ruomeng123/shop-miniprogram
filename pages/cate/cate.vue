@@ -1,5 +1,7 @@
 <template>
 	<view>
+		<!-- 搜索组件 -->
+		<search @click="gotoSearch"></search>
 		<view class="scroll-view-container">
 			<!-- 左侧滚动区 -->
 			<scroll-view class="scroll-view-left" scroll-y enhanced :show-scrollbar="false"  :style="{height: screenHeight + 'px'}">
@@ -41,8 +43,8 @@
 			this.getCategoryList()
 			// 获取系统信息
 			const sysInfo = uni.getSystemInfoSync()
-			// 获取屏幕高度
-			this.screenHeight = sysInfo.screenHeight
+			// 获取屏幕高度,减去顶部搜索框的高度50px
+			this.screenHeight = sysInfo.screenHeight - 50
 		},
 		methods: {
 			// 获取分类数据
@@ -68,6 +70,12 @@
 				console.log(item3);
 				uni.navigateTo({
 					url: '/subpkg/goods_list/goods_list?cid=' + item3.cat_id
+				})
+			},
+			// 搜索框点击事件
+			gotoSearch() {
+				uni.navigateTo({
+					url: '../../subpkg/search_page/search_page'
 				})
 			}
 		}
