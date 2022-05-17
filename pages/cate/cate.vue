@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<!-- 搜索组件 -->
+		<!-- 搜索组件区 -->
 		<search @click="gotoSearch"></search>
 		<view class="scroll-view-container">
 			<!-- 左侧滚动区 -->
