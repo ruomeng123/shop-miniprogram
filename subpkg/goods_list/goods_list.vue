@@ -36,7 +36,6 @@
 				this.isLoading = true
 				const {data: res} = await uni.$http.get('/api/public/v1/goods/search', this.queryObj)
 				this.isLoading = false
-				console.log(res);
 				// 只要数据请求完毕,就立即按需调用callback回调函数
 				callback && callback()
 				if(res.meta.status !== 200) {
@@ -63,7 +62,6 @@
 			
 			this.queryObj.pagenum++
 			this.getGoodsList()
-			console.log('加载了');
 		},
 		// 下拉刷新事件
 		onPullDownRefresh() {
