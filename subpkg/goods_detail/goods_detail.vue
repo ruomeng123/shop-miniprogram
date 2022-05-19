@@ -26,16 +26,46 @@
 
 		<!-- 商品详情区域 -->
 		<rich-text :nodes="goods_info.goods_introduce"></rich-text>
-		
+
 		<!-- 商品导航组件 -->
 		<view class="goods-nav">
-			<uni-goods-nav :fill="true" :options="options" :buttonGroup="buttonGroup" @click="onClick" @buttonClick="buttonClick" />
+			<uni-goods-nav :fill="true" :options="options" :buttonGroup="buttonGroup" @click="onClick"
+				@buttonClick="buttonClick" />
 		</view>
 	</view>
 </template>
 
 <script>
+	import {
+		mapState,
+		mapMutations,
+		mapGetters
+	} from 'vuex'
+
 	export default {
+		computed: {
+			...mapState('m_cart', ['cart']),
+			...mapGetters('m_cart', ['total'])
+		},
+		watch: {
+			// 监听total值的变化
+			// total(newVal) {
+			// 	const findResult = this.options.find(item => item.text === '购物车')
+			// 	if(findResult) {
+			// 		findResult.info = newVal
+			// 	}
+			// }
+			total: {
+				handler(newVal) {
+					const findResult = this.options.find(item => item.text === '购物车')
+					if (findResult) {
+						findResult.info = newVal
+					}
+				},
+				// immediate 属性用来声明此侦听器，是否在页面初次加载完毕后立即调用
+				immediate: true
+			}
+		},
 		data() {
 			return {
 				goods_info: {}, // 商品信息数据
@@ -46,14 +76,14 @@
 				}, {
 					icon: 'cart',
 					text: '购物车',
-					info: 2
+					info: 0
 				}],
 				// 右侧按钮组的配置对象
 				buttonGroup: [{
 						text: '加入购物车',
 						backgroundColor: '#e193db',
 						color: '#fff'
-				 },
+					},
 					{
 						text: '立即购买',
 						backgroundColor: '#db639b',
@@ -95,10 +125,26 @@
 			},
 			// 底部导航左侧图标点击事件
 			onClick(e) {
-				if(e.content.text === "购物车") {
+				if (e.content.text === "购物车") {
 					uni.switchTab({
 						url: '../../pages/cart/cart'
 					})
+				}
+			},
+			// 把 m_cart 模块中的 addToCart 方法映射到当前页面使用
+			...mapMutations('m_cart', ['addToCart']),
+			// 底部导航右侧图标点击事件
+			buttonClick(e) {
+				if (e.content.text === '加入购物车') {
+					const goods = {
+						goods_id: this.goods_info.goods_id,
+						goods_name: this.goods_info.goods_name,
+						goods_price: this.goods_info.goods_price,
+						goods_count: 1, // 商品加购数量
+						goods_small_logo: this.goods_info.goods_small_logo,
+						goods_state: true // 商品勾选状态
+					}
+					this.addToCart(goods)
 				}
 			}
 		}
@@ -109,6 +155,7 @@
 	.goods-detail-container {
 		margin-bottom: 50px;
 	}
+
 	swiper {
 		height: 750rpx;
 
@@ -142,7 +189,7 @@
 				flex-direction: column;
 				justify-content: center;
 				align-items: center;
-				width: 120rpx;
+				width: 200rpx;
 				font-size: 12px;
 				color: gary;
 				border-left: 1px solid #efefef;
@@ -155,6 +202,7 @@
 			font-size: 12px;
 		}
 	}
+
 	.goods-nav {
 		position: fixed;
 		bottom: 0;
