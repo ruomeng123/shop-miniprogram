@@ -12,12 +12,12 @@
 	  </view>
 	
 	  <!-- 结算按钮 -->
-	  <view class="btn-settle">结算({{checkedGoodsCount}})</view>
+	  <view class="btn-settle" @click="settlement">结算({{checkedGoodsCount}})</view>
 	</view>
 </template>
 
 <script>
-	import { mapGetters, mapMutations } from 'vuex'
+	import { mapGetters, mapMutations, mapState } from 'vuex'
 	export default {
 		name:"my-settle",
 		data() {
@@ -26,6 +26,8 @@
 			};
 		},
 		computed: {
+			...mapState('m_user', [ 'token']),
+			...mapGetters('m_user', ['addressStr']),
 			...mapGetters('m_cart', ['checkedGoodsCount', 'total', 'checkedGoodsAmount']),
 			// 是否全选
 			isFullChecked() {
@@ -36,6 +38,18 @@
 			...mapMutations('m_cart', ['updateAllGoodsState']),
 			changeAllState() {
 				this.updateAllGoodsState(!this.isFullChecked)
+			},
+			// 结算按钮点击事件
+			settlement() {
+				if(!this.checkedGoodsCount) {
+					return uni.$showMsg('您还未选择要结算的商品!')
+				}
+				if(!this.addressStr) {
+					return uni.$showMsg('请选择收货地址!')
+				}
+				if(!this.token) {
+					return uni.$showMsg('请登录后再结算!')
+				}
 			}
 		}
 	}
